@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
-    // Aquí ya tienes métodos como save(), findAll(), deleteById(), etc.
+    
 }

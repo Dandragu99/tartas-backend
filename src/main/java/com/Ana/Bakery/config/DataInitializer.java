@@ -31,9 +31,9 @@ public class DataInitializer {
                 tartaRedVelvet.setDescripcion("Nuestra tarta más elegante y suave.");
                 tartaRedVelvet.setPrecioBase(25.0);
 
-                tartaRedVelvet.setImgPaso1("assets/img/red-velvet-1.jpeg");
-                tartaRedVelvet.setImgPaso2("assets/img/red-velvet-2.jpeg");
-                tartaRedVelvet.setImgPaso3("assets/img/red-velvet-3.jpeg");
+                tartaRedVelvet.setImgPaso1("assets/img/red-velvet-1.png");
+                tartaRedVelvet.setImgPaso2("assets/img/red-velvet-2.png");
+                tartaRedVelvet.setImgPaso3("assets/img/red-velvet-3.png");
                 prodRepo.save(tartaRedVelvet);
 
                 ProductoBase cheescake = new ProductoBase();
@@ -51,9 +51,9 @@ public class DataInitializer {
                 lemonCake.setDescripcion("Sorprende a los tuyos con el mejor sabor.");
                 lemonCake.setPrecioBase(15.0);
 
-                lemonCake.setImgPaso1("assets/img/lemonCake-1.jpg");
-                lemonCake.setImgPaso2("assets/img/lemonCake-2.jpg");
-                lemonCake.setImgPaso3("assets/img/lemonCake-3.jpg");
+                lemonCake.setImgPaso1("assets/img/tarta-limon-1.png");
+                lemonCake.setImgPaso2("assets/img/tarta-limon-2.png");
+                lemonCake.setImgPaso3("assets/img/tarta-limon-3.png");
                 prodRepo.save(lemonCake);
 
 
@@ -63,9 +63,9 @@ public class DataInitializer {
                 chocolate.setDescripcion("Nuestra tarta más dulce.");
                 chocolate.setPrecioBase(25.0);
 
-                chocolate.setImgPaso1("assets/img/chocolate-1.jpeg");
+                chocolate.setImgPaso1("assets/img/chocolate-1.png");
                 chocolate.setImgPaso2("assets/img/chocolate-2.jpeg");
-                chocolate.setImgPaso3("assets/img/chocolate-3.jpeg");
+                chocolate.setImgPaso3("assets/img/chocolate-3.png");
                 prodRepo.save(chocolate);
 
                 ProductoBase whiskey = new ProductoBase();
