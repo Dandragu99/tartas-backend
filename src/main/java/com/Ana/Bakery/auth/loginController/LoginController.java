@@ -1,0 +1,35 @@
+package com.Ana.Bakery.auth.loginController;
+
+
+import com.Ana.Bakery.auth.dto.LoginRequest;
+import com.Ana.Bakery.model.Usuario;
+import com.Ana.Bakery.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:4200")
+public class LoginController {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+            throw new RuntimeException("Password incorrecta");
+        }
+
+        // TEMPORAL — aún no metemos JWT
+        return ResponseEntity.ok("Login correcto");
+    }
+}
