@@ -1,7 +1,9 @@
 package com.Ana.Bakery.auth.loginController;
 
 
+import com.Ana.Bakery.auth.dto.AuthResponse;
 import com.Ana.Bakery.auth.dto.LoginRequest;
+import com.Ana.Bakery.auth.service.JwtService;
 import com.Ana.Bakery.model.Usuario;
 import com.Ana.Bakery.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,8 @@ public class LoginController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    @Autowired
+    private JwtService jwtService;
     @Autowired
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
@@ -29,7 +32,8 @@ public class LoginController {
             throw new RuntimeException("Password incorrecta");
         }
 
-        // TEMPORAL — aún no metemos JWT
-        return ResponseEntity.ok("Login correcto");
+        String token = jwtService.generateToken(usuario);
+        return ResponseEntity.ok(new AuthResponse(token));
+
     }
 }

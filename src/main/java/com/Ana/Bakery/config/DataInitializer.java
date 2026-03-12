@@ -3,14 +3,45 @@ package com.Ana.Bakery.config;
 import com.Ana.Bakery.model.CategoriaIngrediente;
 import com.Ana.Bakery.model.Ingrediente;
 import com.Ana.Bakery.model.ProductoBase;
+import com.Ana.Bakery.model.Usuario;
 import com.Ana.Bakery.repository.IngredienteRepository;
 import com.Ana.Bakery.repository.ProductoBaseRepository;
+import com.Ana.Bakery.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataInitializer {
+
+    @Bean
+    CommandLineRunner initUsers(UsuarioRepository usuarioRepository,
+                                PasswordEncoder passwordEncoder){
+        return args -> {
+            if (usuarioRepository.count() == 0){
+
+                Usuario admin = new Usuario();
+                admin.setUsername("admin");
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setEmail("admin@bakery.com");
+                admin.setNombreCompleto("Administrador");
+                admin.setRol("ROLE_ADMIN");
+
+                usuarioRepository.save(admin);
+
+
+                Usuario cliente = new Usuario();
+                cliente.setUsername("cliente");
+                cliente.setPassword(passwordEncoder.encode("cliente123"));
+                cliente.setEmail("cliente@bakery.com");
+                cliente.setNombreCompleto("Cliente Normal");
+                cliente.setRol("ROLE_CLIENTE");
+
+                usuarioRepository.save(cliente);
+            }
+        };
+    }
 
     @Bean
     CommandLineRunner initDatabase(IngredienteRepository ingRepo, ProductoBaseRepository prodRepo) {

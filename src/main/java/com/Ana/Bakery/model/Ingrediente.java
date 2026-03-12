@@ -3,8 +3,7 @@ package com.Ana.Bakery.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+
 @Builder
 @Entity
 @Table(name = "ingredientes")
@@ -28,6 +27,46 @@ public class Ingrediente {
         this.nombre = nombre;
         this.tipo = tipo;
         this.precioAdicional = precioAdicional;
+        this.disponible = disponible;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public CategoriaIngrediente getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(CategoriaIngrediente tipo) {
+        this.tipo = tipo;
+    }
+
+    public Double getPrecioAdicional() {
+        return precioAdicional;
+    }
+
+    public void setPrecioAdicional(Double precioAdicional) {
+        this.precioAdicional = precioAdicional;
+    }
+
+    public Boolean getDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(Boolean disponible) {
         this.disponible = disponible;
     }
 }
