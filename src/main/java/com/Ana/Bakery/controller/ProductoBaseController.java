@@ -12,31 +12,24 @@ import java.util.List;
 @RequestMapping("/api/productos-base")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductoBaseController {
-
     @Autowired
     private ProductoBaseRepository productoBaseRepository;
-
-    // GET ALL
     @GetMapping
     public List<ProductoBase> getAll() {
         return productoBaseRepository.findAll();
     }
 
-    // GET BY ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductoBase> getById(@PathVariable Long id){
         return productoBaseRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    // CREATE
     @PostMapping
     public ProductoBase create(@RequestBody ProductoBase producto){
         return productoBaseRepository.save(producto);
     }
 
-    // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<ProductoBase> update(@PathVariable Long id, @RequestBody ProductoBase productoActualizado){
 
