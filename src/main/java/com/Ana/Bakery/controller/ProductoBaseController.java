@@ -1,5 +1,6 @@
 package com.Ana.Bakery.controller;
 
+import com.Ana.Bakery.model.Ingrediente;
 import com.Ana.Bakery.model.ProductoBase;
 import com.Ana.Bakery.repository.ProductoBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import java.util.List;
 public class ProductoBaseController {
     @Autowired
     private ProductoBaseRepository productoBaseRepository;
+
+    // PETICIONES GET
     @GetMapping
     public List<ProductoBase> getAll() {
         return productoBaseRepository.findAll();
@@ -25,6 +28,15 @@ public class ProductoBaseController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/{id}/ingredientes")
+    public ResponseEntity<List<Ingrediente>> getIngredientes(@PathVariable Long id) {
+        return productoBaseRepository.findById(id)
+                .map(p -> ResponseEntity.ok(p.getIngredientesCompatibles()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // PETICIONES POST
     @PostMapping
     public ProductoBase create(@RequestBody ProductoBase producto){
         return productoBaseRepository.save(producto);
