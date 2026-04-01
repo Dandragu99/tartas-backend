@@ -4,6 +4,7 @@ import com.Ana.Bakery.repository.IngredienteRepository;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.*;
 
 @Service
@@ -16,49 +17,65 @@ public class OllamaService {
         this.ingredienteRepository = ingredienteRepository;
     }
 
-    public String generarRespuesta(String mensajeUsuario, List<String> historial) {
+    public String generarRespuesta(String mensajeUsuario, List<Map<String, String>> historial) {
+
         String url = "http://localhost:11434/api/chat";
 
-        // Catálogo dinámico
         List<String> ingredientes = ingredienteRepository.findAll()
                 .stream()
-                .map(i -> i.getNombre() + " (" + i.getDisponible() + " disponibles)")
+                .limit(10)
+                .map(i -> i.getNombre())
                 .toList();
 
-        String catalogo = String.join("\n", ingredientes);
+        String catalogo = String.join(", ", ingredientes);
 
         List<Map<String, String>> messages = new ArrayList<>();
 
-        // System prompt fuerte
         messages.add(Map.of(
                 "role", "system",
                 "content", """
-                Eres un asistente experto de una tienda de tartas personalizadas.
-                Reglas estrictas:
-                - Solo recomienda ingredientes que aparezcan en el catálogo.
-                - Nunca inventes ingredientes que no existan.
-                - Sugiere combinaciones ricas y coherentes.
-                Catálogo actual:
-                """ + catalogo
+                        Eres un asistente de una tienda de tartas.
+
+                        REGLAS:
+                        - Solo puedes usar ingredientes del catálogo
+                        - No inventes ingredientes
+                        - Responde de forma breve (máx 1 frase)
+                        - Sugiere combinaciones del catálogo
+
+                        FORMATO:
+                        - Respuesta simple
+
+                        CATÁLOGO DISPONIBLE:
+                        """ + catalogo
         ));
 
-        // Historial (mejora la conversación)
-        if (historial != null) {
-            for (String msg : historial) {
-                messages.add(Map.of("role", "user", "content", msg));
+        if (historial != null && !historial.isEmpty()) {
+            List<Map<String, String>> historialLimitado = historial.stream()
+                    .skip(Math.max(0, historial.size() - 6))
+                    .toList();
+
+            for (Map<String, String> msg : historialLimitado) {
+                messages.add(Map.of(
+                        "role", msg.get("role"),
+                        "content", msg.get("content")
+                ));
             }
         }
 
         messages.add(Map.of("role", "user", "content", mensajeUsuario));
 
         Map<String, Object> body = Map.of(
-                "model", "phi3",                    // prueba también "gemma2:2b"
+                "model", "tinyllama",
                 "messages", messages,
                 "stream", false,
-                "keep_alive", -1,                   // ← muy importante
+                "keep_alive", -1,
                 "options", Map.of(
-                        "num_ctx", 4096,
-                        "temperature", 0.7
+                        "num_ctx", 1024,
+                        "num_predict", 80,
+                        "temperature", 0.2,
+                        "top_p", 0.8,
+                        "repeat_penalty", 1.2,
+                        "num_thread", 8
                 )
         );
 
@@ -70,12 +87,14 @@ public class OllamaService {
         ResponseEntity<Map> responseEntity = restTemplate.postForEntity(url, request, Map.class);
 
         Map<String, Object> responseBody = responseEntity.getBody();
+
         if (responseBody == null || !responseBody.containsKey("message")) {
-            return "Lo siento, hubo un error al procesar la respuesta.";
+            return "Error al generar respuesta";
         }
 
         @SuppressWarnings("unchecked")
         Map<String, Object> messageObj = (Map<String, Object>) responseBody.get("message");
+
         return (String) messageObj.get("content");
     }
 }
