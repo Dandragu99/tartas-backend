@@ -1,11 +1,14 @@
 package com.Ana.Bakery.bot;
 
+import com.Ana.Bakery.model.CategoriaIngrediente;
+import com.Ana.Bakery.model.Ingrediente;
 import com.Ana.Bakery.repository.IngredienteRepository;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OllamaService {
@@ -21,13 +24,23 @@ public class OllamaService {
 
         String url = "http://localhost:11434/api/chat";
 
-        List<String> ingredientes = ingredienteRepository.findAll()
-                .stream()
-                .limit(10)
-                .map(i -> i.getNombre())
-                .toList();
+        List<Ingrediente> ingredientes = ingredienteRepository.findAll();
+        Map<CategoriaIngrediente, List<String>> agrupados =
+                ingredientes.stream()
+                        .collect(Collectors.groupingBy(
+                                Ingrediente::getTipo,
+                                Collectors.mapping(Ingrediente::getNombre, Collectors.toList())
+                        ));
 
-        String catalogo = String.join(", ", ingredientes);
+        StringBuilder catalogoBuilder = new StringBuilder();
+
+        agrupados.forEach((tipo, lista) -> {
+            catalogoBuilder.append("- ").append(tipo.name()).append(": ")
+                    .append(String.join(", ", lista))
+                    .append("\n");
+        });
+
+        String catalogo = catalogoBuilder.toString();
 
         List<Map<String, String>> messages = new ArrayList<>();
 
@@ -37,10 +50,18 @@ public class OllamaService {
                         Eres un asistente de una tienda de tartas.
 
                         REGLAS:
-                        - Solo puedes usar ingredientes del catálogo
                         - No inventes ingredientes
-                        - Responde de forma breve (máx 1 frase)
-                        - Sugiere combinaciones del catálogo
+                        - Responde de forma breve (máximo 15 palabras)
+                        - Sugiere combinaciones del catálogo siempre
+                        - SOLO puedes usar ingredientes EXACTAMENTE como aparecen en el catálogo
+                        - Si el usuario pide algo fuera del catálogo, di "No disponible"
+                        - NO inventes nombres ni variantes
+                        - Responde usando SOLO ingredientes del catálogo en una combinación válida (1 bizcocho + 1 relleno + 1 cobertura opcional + extras opcionales)
+                        - No alucines, contesta de forma simple y relacionado con la tienda de tartas y el catálogo
+                        INTERPRETACIÓN:
+                        - "tarta de queso" significa usar Cobertura Cheesecake
+                        - "tarta de chocolate" significa usar ingredientes de chocolate
+                        - "tarta de limón" significa usar ingredientes de limón
 
                         FORMATO:
                         - Respuesta simple
@@ -65,13 +86,14 @@ public class OllamaService {
         messages.add(Map.of("role", "user", "content", mensajeUsuario));
 
         Map<String, Object> body = Map.of(
-                "model", "tinyllama",
+                "model", "phi3:mini",
                 "messages", messages,
                 "stream", false,
                 "keep_alive", -1,
                 "options", Map.of(
+                        "stop", List.of("\n\n"),
                         "num_ctx", 1024,
-                        "num_predict", 80,
+                        "num_predict", 150,
                         "temperature", 0.2,
                         "top_p", 0.8,
                         "repeat_penalty", 1.2,
