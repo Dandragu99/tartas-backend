@@ -65,7 +65,7 @@ public class OllamaService {
         messages.add(Map.of("role", "user", "content", mensajeUsuario));
 
         Map<String, Object> body = Map.of(
-                "model", "tinyllama",
+                "model", "phi3:mini",
                 "messages", messages,
                 "stream", false,
                 "keep_alive", -1,
