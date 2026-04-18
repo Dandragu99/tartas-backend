@@ -3,6 +3,7 @@ package com.Ana.Bakery.auth.loginController;
 
 import com.Ana.Bakery.auth.dto.AuthResponse;
 import com.Ana.Bakery.auth.dto.LoginRequest;
+import com.Ana.Bakery.auth.dto.RegisterRequest;
 import com.Ana.Bakery.auth.service.JwtService;
 import com.Ana.Bakery.model.Usuario;
 import com.Ana.Bakery.repository.UsuarioRepository;
@@ -35,5 +36,25 @@ public class LoginController {
         String token = jwtService.generateToken(usuario);
         return ResponseEntity.ok(new AuthResponse(token));
 
+    }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
+        if (usuarioRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("El nombre de usuario ya existe");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setUsername(request.getUsername());
+        usuario.setEmail(request.getEmail());
+        usuario.setNombreCompleto(request.getNombreCompleto());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
+        usuario.setRol("ROLE_CLIENTE");
+
+        usuarioRepository.save(usuario);
+
+        String token = jwtService.generateToken(usuario);
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }

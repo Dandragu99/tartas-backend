@@ -21,7 +21,6 @@ public class ProductoBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     private String nombre;
     private String descripcion;
     private Double precioBase;
