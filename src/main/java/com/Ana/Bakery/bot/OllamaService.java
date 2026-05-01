@@ -1,6 +1,6 @@
 package com.Ana.Bakery.bot;
 
-import com.Ana.Bakery.repository.IngredienteRepository;
+import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

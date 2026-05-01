@@ -1,7 +1,10 @@
-package com.Ana.Bakery.model;
+package com.Ana.Bakery.usuario.usuarioModel;
 
+import com.Ana.Bakery.pedido.pedidoModel.Pedido;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -11,6 +14,10 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private List<Pedido> pedidos;
+
 
     @Column(unique = true, nullable = false)
     private String username;

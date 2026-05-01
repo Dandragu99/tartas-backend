@@ -1,12 +1,12 @@
-package com.Ana.Bakery.auth.loginController;
+package com.Ana.Bakery.auth.controller;
 
 
 import com.Ana.Bakery.auth.dto.AuthResponse;
 import com.Ana.Bakery.auth.dto.LoginRequest;
 import com.Ana.Bakery.auth.dto.RegisterRequest;
 import com.Ana.Bakery.auth.service.JwtService;
-import com.Ana.Bakery.model.Usuario;
-import com.Ana.Bakery.repository.UsuarioRepository;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
+import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

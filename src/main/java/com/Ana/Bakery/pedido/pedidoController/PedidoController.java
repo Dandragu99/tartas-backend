@@ -1,7 +1,10 @@
-package com.Ana.Bakery.controller;
+package com.Ana.Bakery.pedido.pedidoController;
 
-import com.Ana.Bakery.model.Pedido;
-import com.Ana.Bakery.repository.PedidoRepository;
+import com.Ana.Bakery.pedido.dto.CrearPedidoDTO;
+import com.Ana.Bakery.pedido.dto.PedidoDTO;
+import com.Ana.Bakery.pedido.pedidoModel.Pedido;
+import com.Ana.Bakery.pedido.pedidoRepository.PedidoRepository;
+import com.Ana.Bakery.pedido.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +18,12 @@ public class PedidoController {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+    @Autowired
+    private PedidoService service;
 
-    @GetMapping
-    public List<Pedido> getAll(){
-        return pedidoRepository.findAll();
+    @GetMapping(path = "/todos")
+    public @ResponseBody List<PedidoDTO> getAll(){
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
@@ -29,10 +34,10 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Pedido create(@RequestBody Pedido pedido){
-        return pedidoRepository.save(pedido);
-    }
+    /*@PostMapping
+    public PedidoDTO create(@RequestBody CrearPedidoDTO dto) {
+        return service.crearPedido(dto);
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity<Pedido> update(@PathVariable Long id, @RequestBody Pedido pedidoActualizado){

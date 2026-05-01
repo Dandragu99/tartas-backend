@@ -1,8 +1,8 @@
-package com.Ana.Bakery.controller;
+package com.Ana.Bakery.producto.productoController;
 
-import com.Ana.Bakery.model.Ingrediente;
-import com.Ana.Bakery.model.ProductoBase;
-import com.Ana.Bakery.repository.ProductoBaseRepository;
+import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.producto.productoModel.ProductoBase;
+import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

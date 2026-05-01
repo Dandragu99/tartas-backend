@@ -1,12 +1,12 @@
 package com.Ana.Bakery.config;
 
-import com.Ana.Bakery.model.CategoriaIngrediente;
-import com.Ana.Bakery.model.Ingrediente;
-import com.Ana.Bakery.model.ProductoBase;
-import com.Ana.Bakery.model.Usuario;
-import com.Ana.Bakery.repository.IngredienteRepository;
-import com.Ana.Bakery.repository.ProductoBaseRepository;
-import com.Ana.Bakery.repository.UsuarioRepository;
+import com.Ana.Bakery.ingrediente.categoriaIngrediente.CategoriaIngrediente;
+import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.producto.productoModel.ProductoBase;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
+import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
+import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
+import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
