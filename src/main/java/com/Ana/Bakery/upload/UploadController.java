@@ -1,4 +1,4 @@
-package com.Ana.Bakery.controller;
+package com.Ana.Bakery.upload;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

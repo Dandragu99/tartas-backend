@@ -1,6 +1,6 @@
-package com.Ana.Bakery.repository;
+package com.Ana.Bakery.usuario.usuarioRepository;
 
-import com.Ana.Bakery.model.Usuario;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

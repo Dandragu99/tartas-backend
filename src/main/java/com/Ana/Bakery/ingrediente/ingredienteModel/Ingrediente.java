@@ -1,5 +1,6 @@
-package com.Ana.Bakery.model;
+package com.Ana.Bakery.ingrediente.ingredienteModel;
 
+import com.Ana.Bakery.ingrediente.categoriaIngrediente.CategoriaIngrediente;
 import jakarta.persistence.*;
 import lombok.*;
 

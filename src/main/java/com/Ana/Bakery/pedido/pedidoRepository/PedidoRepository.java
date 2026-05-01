@@ -1,6 +1,6 @@
-package com.Ana.Bakery.repository;
+package com.Ana.Bakery.pedido.pedidoRepository;
 
-import com.Ana.Bakery.model.Pedido;
+import com.Ana.Bakery.pedido.pedidoModel.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

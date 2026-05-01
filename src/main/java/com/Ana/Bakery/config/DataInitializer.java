@@ -1,12 +1,12 @@
 package com.Ana.Bakery.config;
 
-import com.Ana.Bakery.model.CategoriaIngrediente;
-import com.Ana.Bakery.model.Ingrediente;
-import com.Ana.Bakery.model.ProductoBase;
-import com.Ana.Bakery.model.Usuario;
-import com.Ana.Bakery.repository.IngredienteRepository;
-import com.Ana.Bakery.repository.ProductoBaseRepository;
-import com.Ana.Bakery.repository.UsuarioRepository;
+import com.Ana.Bakery.ingrediente.categoriaIngrediente.CategoriaIngrediente;
+import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.producto.productoModel.ProductoBase;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
+import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
+import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
+import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -118,27 +118,37 @@ public class DataInitializer {
                     chocolate.setIngredientesCompatibles(List.of(bizChocolate, bizVainilla, relChocolate, relCrema, cobChocolate, extChocolate, extFrutos));
                     prodRepo.save(chocolate);
 
-                    // Whiskey → bizcocho chocolate/vainilla, relleno crema/chocolate, cobertura chocolate, extras chocolate
-                    ProductoBase whiskey = new ProductoBase();
-                    whiskey.setNombre("Tarta de Whiskey");
-                    whiskey.setDescripcion("La tarta de whiskey más alcoholica.");
-                    whiskey.setPrecioBase(35.0);
-                    whiskey.setImgPaso1("assets/img/whiskey-1.png");
-                    whiskey.setImgPaso2("assets/img/whiskey-2.png");
-                    whiskey.setImgPaso3("assets/img/whiskey-3.png");
-                    whiskey.setIngredientesCompatibles(List.of(bizChocolate, bizVainilla, relChocolate, relCrema, cobChocolate, extChocolate));
-                    prodRepo.save(whiskey);
+                    ProductoBase carrot = new ProductoBase();
+                    carrot.setNombre("Carrot Cake");
+                    carrot.setDescripcion("Bizcocho jugoso de zanahoria con frosting de queso.");
+                    carrot.setPrecioBase(28.0);
+                    carrot.setImgPaso1("assets/img/carrot-1.png");
+                    carrot.setImgPaso2("assets/img/carrot-2.png");
+                    carrot.setImgPaso3("assets/img/carrot-3.png");
+                    carrot.setIngredientesCompatibles(List.of(
+                            bizVainilla,
+                            relCrema,
+                            relVainilla,
+                            cobCheesecake,
+                            extFrutos
+                    ));
+                    prodRepo.save(carrot);
 
-                    // Vainilla → bizcocho vainilla, relleno vainilla/crema/fresa, cobertura cheesecake, extras frutos/limón
-                    ProductoBase vainilla = new ProductoBase();
-                    vainilla.setNombre("Tarta de vainilla");
-                    vainilla.setDescripcion("Sorprende a los tuyos con el mejor sabor de la vainilla.");
-                    vainilla.setPrecioBase(15.0);
-                    vainilla.setImgPaso1("assets/img/vainilla-1.jpg");
-                    vainilla.setImgPaso2("assets/img/vainilla-2.jpg");
-                    vainilla.setImgPaso3("assets/img/vainilla-3.jpg");
-                    vainilla.setIngredientesCompatibles(List.of(bizVainilla, relVainilla, relCrema, relFresa, cobCheesecake, extFrutos, extLimon));
-                    prodRepo.save(vainilla);
+                    ProductoBase fresa = new ProductoBase();
+                    fresa.setNombre("Tarta de Fresa");
+                    fresa.setDescripcion("Clásica tarta de fresas con nata fresca.");
+                    fresa.setPrecioBase(22.0);
+                    fresa.setImgPaso1("assets/img/fresa-1.png");
+                    fresa.setImgPaso2("assets/img/fresa-2.png");
+                    fresa.setImgPaso3("assets/img/fresa-3.png");
+                    fresa.setIngredientesCompatibles(List.of(
+                            bizVainilla,
+                            relFresa,
+                            relCrema,
+                            cobCheesecake,
+                            extFrutos
+                    ));
+                    prodRepo.save(fresa);
                 }
             }
 

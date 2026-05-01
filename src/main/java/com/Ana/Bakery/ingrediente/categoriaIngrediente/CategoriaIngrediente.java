@@ -1,4 +1,4 @@
-package com.Ana.Bakery.model;
+package com.Ana.Bakery.ingrediente.categoriaIngrediente;
 public enum CategoriaIngrediente {
     BIZCOCHO,
     RELLENO,

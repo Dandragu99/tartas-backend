@@ -1,6 +1,6 @@
 package com.Ana.Bakery.auth.service;
 
-import com.Ana.Bakery.model.Usuario;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;

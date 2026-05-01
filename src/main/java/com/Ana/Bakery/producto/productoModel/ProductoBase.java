@@ -1,6 +1,6 @@
-package com.Ana.Bakery.model;
+package com.Ana.Bakery.producto.productoModel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,6 @@ public class ProductoBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     private String nombre;
     private String descripcion;
     private Double precioBase;
