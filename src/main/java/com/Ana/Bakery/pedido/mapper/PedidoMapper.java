@@ -2,7 +2,9 @@ package com.Ana.Bakery.pedido.mapper;
 
 import com.Ana.Bakery.pedido.dto.PedidoDTO;
 import com.Ana.Bakery.pedido.pedidoModel.Pedido;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PedidoMapper {
     public PedidoDTO toDto(Pedido pedido){
         return new PedidoDTO(

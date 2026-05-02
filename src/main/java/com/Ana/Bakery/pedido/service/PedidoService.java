@@ -2,6 +2,7 @@ package com.Ana.Bakery.pedido.service;
 
 import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
 import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
+import com.Ana.Bakery.pedido.dto.CrearPedidoCarritoDTO;
 import com.Ana.Bakery.pedido.dto.CrearPedidoDTO;
 import com.Ana.Bakery.pedido.dto.PedidoDTO;
 import com.Ana.Bakery.pedido.estadoPedido.EstadoPedido;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -34,9 +36,6 @@ public class PedidoService {
     @Autowired
     private IngredienteRepository ingredienteRepository;
 
-    public PedidoService(PedidoRepository repository) {
-        this.repository = repository;
-    }
 
     public List<PedidoDTO> findAll() {
         return repository.findAll()
@@ -94,5 +93,27 @@ public class PedidoService {
             return true;
         }
         return false;
+    }
+
+    public List<PedidoDTO> crearPedidoDesdeCarrito(CrearPedidoCarritoDTO dto) {
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return dto.getItems().stream().map(item -> {
+            Pedido p = new Pedido();
+            ProductoBase producto = productoRepository.findById(item.getProductoBaseId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            List<Ingrediente> ingredientes = ingredienteRepository.findAllById(item.getIngredientesIds());
+
+            p.setUsuario(usuario);
+            p.setProductoBase(producto);
+            p.setIngredientesSeleccionados(ingredientes);
+            p.setNotasAlergias(item.getAlergias());
+            p.setPrecioTotal(item.getPrecioUnitario() * item.getCantidad());
+            p.setEstado(EstadoPedido.PENDIENTE);
+            p.setFechaEntrega(LocalDateTime.now().plusDays(3));
+
+            return mapper.toDto(repository.save(p));
+        }).toList();
     }
 }

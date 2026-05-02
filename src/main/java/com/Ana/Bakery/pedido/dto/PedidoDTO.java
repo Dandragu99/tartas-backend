@@ -22,7 +22,15 @@ public class PedidoDTO {
     private Double precioTotal;
     private LocalDateTime fechaEntrega;
 
-
-    public PedidoDTO(Long id, String nombreCompleto, String nombre, List<String> list, EstadoPedido estado, Double precioTotal, LocalDateTime fechaEntrega) {
+    public PedidoDTO(Long id, String nombreCompleto, String nombre,
+                     List<String> list, EstadoPedido estado,
+                     Double precioTotal, LocalDateTime fechaEntrega) {
+        this.idPedido = id;
+        this.nombreUsuario = nombreCompleto;
+        this.productoBaseNombre = nombre;
+        this.ingredientes = list;
+        this.estado = estado.name();
+        this.precioTotal = precioTotal;
+        this.fechaEntrega = fechaEntrega;
     }
 }
