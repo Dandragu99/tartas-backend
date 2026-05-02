@@ -17,53 +17,37 @@ import java.util.List;
 public class PedidoController {
 
     @Autowired
-    private PedidoRepository pedidoRepository;
-    @Autowired
     private PedidoService service;
 
-    @GetMapping(path = "/todos")
+    @GetMapping(path = "/all")
     public @ResponseBody List<PedidoDTO> getAll(){
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> getById(@PathVariable Long id){
-
-        return pedidoRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PedidoDTO> getById(@PathVariable Long id){
+        return service.findById(id);
     }
 
-    /*@PostMapping
+    @PostMapping
     public PedidoDTO create(@RequestBody CrearPedidoDTO dto) {
         return service.crearPedido(dto);
-    }*/
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pedido> update(@PathVariable Long id, @RequestBody Pedido pedidoActualizado){
-
-        return pedidoRepository.findById(id)
-                .map(pedido -> {
-
-                    pedido.setEstado(pedidoActualizado.getEstado());
-                    pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
-                    pedido.setPrecioTotal(pedidoActualizado.getPrecioTotal());
-                    pedido.setNotasAlergias(pedidoActualizado.getNotasAlergias());
-                    pedido.setIngredientesSeleccionados(pedidoActualizado.getIngredientesSeleccionados());
-
-                    return ResponseEntity.ok(pedidoRepository.save(pedido));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PedidoDTO> update(@PathVariable Long id, @RequestBody Pedido pedidoActualizado){
+        return service.updateById(id, pedidoActualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
 
-        return pedidoRepository.findById(id)
-                .map(pedido -> {
-                    pedidoRepository.delete(pedido);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        boolean eliminado = service.deletById(id);
+
+        if (eliminado){
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

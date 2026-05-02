@@ -2,6 +2,7 @@ package com.Ana.Bakery.pedido.pedidoModel;
 
 
 import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.pedido.estadoPedido.EstadoPedido;
 import com.Ana.Bakery.producto.productoModel.ProductoBase;
 import com.Ana.Bakery.usuario.usuarioModel.Usuario;
 import jakarta.persistence.*;
@@ -26,7 +27,9 @@ public class Pedido {
     @Column(columnDefinition = "TEXT")
     private String notasAlergias;
 
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoPedido estado;
     private Double precioTotal;
     private LocalDateTime fechaEntrega;
 
@@ -41,6 +44,7 @@ public class Pedido {
             inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
     )
     private List<Ingrediente> ingredientesSeleccionados;
+
 
 
 }

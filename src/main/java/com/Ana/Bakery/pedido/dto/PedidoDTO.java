@@ -1,5 +1,6 @@
 package com.Ana.Bakery.pedido.dto;
 
+import com.Ana.Bakery.pedido.estadoPedido.EstadoPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,8 @@ public class PedidoDTO {
     private String estado;
     private Double precioTotal;
     private LocalDateTime fechaEntrega;
+
+
+    public PedidoDTO(Long id, String nombreCompleto, String nombre, List<String> list, EstadoPedido estado, Double precioTotal, LocalDateTime fechaEntrega) {
+    }
 }

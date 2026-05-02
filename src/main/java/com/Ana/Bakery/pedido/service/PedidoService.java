@@ -1,44 +1,98 @@
 package com.Ana.Bakery.pedido.service;
 
+import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
 import com.Ana.Bakery.pedido.dto.CrearPedidoDTO;
 import com.Ana.Bakery.pedido.dto.PedidoDTO;
+import com.Ana.Bakery.pedido.estadoPedido.EstadoPedido;
+import com.Ana.Bakery.pedido.mapper.PedidoMapper;
 import com.Ana.Bakery.pedido.pedidoModel.Pedido;
 import com.Ana.Bakery.pedido.pedidoRepository.PedidoRepository;
+import com.Ana.Bakery.producto.productoModel.ProductoBase;
+import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
+import com.Ana.Bakery.usuario.usuarioModel.Usuario;
+import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class PedidoService {
 
     @Autowired
     private PedidoRepository repository;
+    @Autowired
+    private PedidoMapper mapper;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private ProductoBaseRepository productoRepository;
+    @Autowired
+    private IngredienteRepository ingredienteRepository;
 
     public PedidoService(PedidoRepository repository) {
         this.repository = repository;
     }
 
-    public List<PedidoDTO> findAll(){
-        return repository.findAll().stream().map(pedido -> new PedidoDTO(
-                pedido.getId(),
-                pedido.getUsuario().getId(),
-                pedido.getUsuario().getNombreCompleto(),
-                pedido.getProductoBase().getNombre(),
-                pedido.getIngredientesSeleccionados().stream().map(ingrediente -> ingrediente.getNombre()).toList(),
-                pedido.getEstado(),
-                pedido.getPrecioTotal(),
-                pedido.getFechaEntrega()
-        )).toList();
+    public List<PedidoDTO> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
-    public Optional<Pedido> find(Long id){
-        return repository.findById(id);
+
+    public PedidoDTO crearPedido(CrearPedidoDTO dto) {
+        Pedido p = new Pedido();
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        ProductoBase producto = productoRepository.findById(dto.getProductoBaseId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        List<Ingrediente> ingredientes = ingredienteRepository.findAllById(dto.getIngredientesIds());
+
+        p.setUsuario(usuario);
+        p.setProductoBase(producto);
+        p.setIngredientesSeleccionados(ingredientes);
+        p.setNotasAlergias(dto.getNotasAlergias());
+        p.setFechaEntrega(dto.getFechaEntrega());
+        p.setEstado(EstadoPedido.PENDIENTE);
+
+        Pedido pedidoGuardado = repository.save(p);
+        return mapper.toDto(pedidoGuardado);
     }
 
-/*    public PedidoDTO crearPedido(CrearPedidoDTO dto) {
-        return repository.save();
+    public ResponseEntity<PedidoDTO> findById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-*/
+
+    public ResponseEntity<PedidoDTO> updateById( Long id, Pedido pedidoActualizado){
+        return repository.findById(id)
+                .map(pedido -> {
+
+                    pedido.setEstado(pedidoActualizado.getEstado());
+                    pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
+                    pedido.setPrecioTotal(pedidoActualizado.getPrecioTotal());
+                    pedido.setNotasAlergias(pedidoActualizado.getNotasAlergias());
+                    pedido.setIngredientesSeleccionados(pedidoActualizado.getIngredientesSeleccionados());
+
+                    Pedido pedidoGuardado = repository.save(pedido);
+                    return ResponseEntity.ok(mapper.toDto(pedidoGuardado));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    public boolean deletById(Long id) {
+        if (repository.existsById(id)){
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
