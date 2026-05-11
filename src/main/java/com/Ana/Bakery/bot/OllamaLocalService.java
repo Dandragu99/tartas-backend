@@ -5,19 +5,18 @@ import com.Ana.Bakery.ingrediente.categoriaIngrediente.CategoriaIngrediente;
 import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
 import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class OllamaService {
+
+public class OllamaLocalService implements LlmService{
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final IngredienteRepository ingredienteRepository;
 
-    public OllamaService(IngredienteRepository ingredienteRepository) {
+    public OllamaLocalService(IngredienteRepository ingredienteRepository) {
         this.ingredienteRepository = ingredienteRepository;
     }
 

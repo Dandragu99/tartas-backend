@@ -11,10 +11,10 @@ import java.util.Map;
 @RequestMapping("/api/chat")
 public class ChatController {
 
-    private final OllamaService ollamaService;
+    private final LlmService llmService;
 
-    public ChatController(OllamaService ollamaService) {
-        this.ollamaService = ollamaService;
+    public ChatController(LlmService llmService) {
+        this.llmService = llmService;
     }
 
     @PostMapping
@@ -30,7 +30,7 @@ public class ChatController {
             return ResponseEntity.badRequest().body("El campo 'mensaje' es obligatorio");
         }
 
-        String respuesta = ollamaService.generarRespuesta(mensaje, historial);
+        String respuesta = llmService.generarRespuesta(mensaje, historial);
 
         return ResponseEntity.ok(respuesta);
     }
