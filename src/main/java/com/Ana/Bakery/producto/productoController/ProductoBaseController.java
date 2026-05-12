@@ -1,9 +1,10 @@
 package com.Ana.Bakery.producto.productoController;
 
 import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.producto.productoBaseDTO.ProductoBaseDTO;
+import com.Ana.Bakery.producto.productoBaseService.ProductoBaseService;
 import com.Ana.Bakery.producto.productoModel.ProductoBase;
-import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,65 +13,47 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/productos-base")
 @CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class ProductoBaseController {
-    @Autowired
-    private ProductoBaseRepository productoBaseRepository;
 
-    // PETICIONES GET
+    private final ProductoBaseService productoBaseService;
+
     @GetMapping
-    public List<ProductoBase> getAll() {
-        return productoBaseRepository.findAll();
+    public List<ProductoBaseDTO> getAll() {
+        return productoBaseService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoBase> getById(@PathVariable Long id){
-        return productoBaseRepository.findById(id)
+    public ResponseEntity<ProductoBaseDTO> getById(@PathVariable Long id) {
+        return productoBaseService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/ingredientes")
     public ResponseEntity<List<Ingrediente>> getIngredientes(@PathVariable Long id) {
-        return productoBaseRepository.findById(id)
-                .map(p -> ResponseEntity.ok(p.getIngredientesCompatibles()))
-                .orElse(ResponseEntity.notFound().build());
+        List<Ingrediente> ingredientes = productoBaseService.getIngredientes(id);
+        return ingredientes.isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(ingredientes);
     }
 
-    // PETICIONES POST
     @PostMapping
-    public ProductoBase create(@RequestBody ProductoBase producto){
-        return productoBaseRepository.save(producto);
+    public ProductoBaseDTO create(@RequestBody ProductoBase producto) {
+        return productoBaseService.create(producto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoBase> update(@PathVariable Long id, @RequestBody ProductoBase productoActualizado){
-
-        return productoBaseRepository.findById(id)
-                .map(producto -> {
-
-                    producto.setNombre(productoActualizado.getNombre());
-                    producto.setDescripcion(productoActualizado.getDescripcion());
-                    producto.setPrecioBase(productoActualizado.getPrecioBase());
-                    producto.setImgPaso1(productoActualizado.getImgPaso1());
-                    producto.setImgPaso2(productoActualizado.getImgPaso2());
-                    producto.setImgPaso3(productoActualizado.getImgPaso3());
-
-                    ProductoBase actualizado = productoBaseRepository.save(producto);
-
-                    return ResponseEntity.ok(actualizado);
-                })
+    public ResponseEntity<ProductoBaseDTO> update(@PathVariable Long id, @RequestBody ProductoBase productoActualizado) {
+        return productoBaseService.update(id, productoActualizado)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
-            public ResponseEntity<?> delete(@PathVariable Long id){
-
-        return productoBaseRepository.findById(id)
-                .map(producto -> {
-                    productoBaseRepository.delete(producto);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return productoBaseService.delete(id)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
     }
 }

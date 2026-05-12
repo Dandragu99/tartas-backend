@@ -82,6 +82,9 @@ public class DataInitializer {
                     redVelvet.setImgPaso1("assets/img/red-velvet-1.png");
                     redVelvet.setImgPaso2("assets/img/red-velvet-2.png");
                     redVelvet.setImgPaso3("assets/img/red-velvet-3.png");
+                    redVelvet.setImgPaso4("assets/img/red-velvet-4.png");
+                    redVelvet.setImgPaso5("assets/img/red-velvet-5.png");
+
                     redVelvet.setIngredientesCompatibles(List.of(bizVainilla, bizChocolate, relCrema, relFresa, cobRedVelvet, extFrutos, extChocolate));
                     prodRepo.save(redVelvet);
 

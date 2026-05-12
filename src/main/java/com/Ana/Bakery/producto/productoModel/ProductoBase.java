@@ -27,6 +27,8 @@ public class ProductoBase {
     private String imgPaso1;
     private String imgPaso2;
     private String imgPaso3;
+    private String imgPaso4;
+    private String imgPaso5;
 
     // A lo mejor lo cambio a Lazy
     @ManyToMany(fetch = FetchType.EAGER)

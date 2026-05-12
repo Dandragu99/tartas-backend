@@ -2,6 +2,7 @@ package com.Ana.Bakery.bot;
 
 
 import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
+import com.Ana.Bakery.producto.productoRepository.ProductoBaseRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
@@ -21,6 +22,7 @@ public class GroqService implements LlmService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final IngredienteRepository ingredienteRepository;
+    private final ProductoBaseRepository productoBaseRepository;
 
     @Value("${groq.api.key}")
     private String apiKey;
@@ -28,8 +30,9 @@ public class GroqService implements LlmService {
     @Value("${groq.model}")
     private String model;
 
-    public GroqService(IngredienteRepository ingredienteRepository) {
+    public GroqService(IngredienteRepository ingredienteRepository, ProductoBaseRepository productoBaseRepository) {
         this.ingredienteRepository = ingredienteRepository;
+        this.productoBaseRepository = productoBaseRepository;
     }
 
 
@@ -41,32 +44,43 @@ public class GroqService implements LlmService {
         }
         String url = "https://api.groq.com/openai/v1/chat/completions";
 
+        List<String> tartas = productoBaseRepository.findAll()
+                .stream()
+                .map(p -> p.getNombre())
+                .toList();
+
+
         List<String> ingredientes = ingredienteRepository.findAll()
                 .stream()
-                .limit(20)
                 .map(i -> i.getNombre())
                 .toList();
 
-        String catalogo = String.join(", ", ingredientes);
+        String catalogoTartas = String.join(", ", tartas);
+        String catalogoIngredientes = String.join(", ", ingredientes);
 
         List<Map<String, String>> messages = new ArrayList<>();
 
         messages.add(Map.of(
                 "role", "system",
                 "content", """
-                        Te llamas AnaBot y eres el asistente virtual de Ana's Bakery., una tienda de tartas personalizadas.
+                Te llamas AnaBot y eres el asistente virtual de Ana's Bakery, una tienda de tartas personalizadas.
 
-                        REGLAS:
-                        - Responde siempre en español.
-                        - Responde breve y claro.
-                        - Máximo 2 frases.
-                        - Solo puedes hablar de tartas, ingredientes, pedidos, precios orientativos y recomendaciones.
-                        - No inventes ingredientes fuera del catálogo.
-                        - Si el usuario pregunta algo que no tiene relación con la tienda, redirígelo amablemente al tema de tartas.
-                        - Sugiere combinaciones usando el catálogo disponible.
+                REGLAS OBLIGATORIAS:
+                - Responde siempre en español.
+                - Responde breve y claro.
+                - Máximo 2 frases.
+                - No inventes tartas, productos, ingredientes ni precios.
+                - Si el usuario pregunta qué tartas hay disponibles, responde SOLO con las tartas de la sección TARTAS DISPONIBLES.
+                - Si el usuario pregunta por ingredientes, responde SOLO con los ingredientes de la sección INGREDIENTES DISPONIBLES.
+                - No confundas ingredientes con tartas.
+                - Si no tienes información suficiente, dilo claramente.
+                - Solo puedes hablar de Ana's Bakery, tartas, ingredientes, pedidos, precios orientativos y recomendaciones.
 
-                        CATÁLOGO DISPONIBLE:
-                        """ + catalogo
+                TARTAS DISPONIBLES:
+                """ + catalogoTartas + """
+
+                INGREDIENTES DISPONIBLES:
+                """ + catalogoIngredientes
         ));
 
         if (historial != null && !historial.isEmpty()) {
@@ -93,7 +107,7 @@ public class GroqService implements LlmService {
                 "model", model,
                 "messages", messages,
                 "temperature", 0.2,
-                "max_tokens", 80,
+                "max_tokens", 120,
                 "top_p", 0.8
         );
 
