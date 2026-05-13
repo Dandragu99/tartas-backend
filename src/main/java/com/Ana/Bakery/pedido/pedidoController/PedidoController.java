@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -30,6 +31,10 @@ public class PedidoController {
     public ResponseEntity<PedidoDTO> getById(@PathVariable Long id){
         return service.findById(id);
     }
+    @GetMapping("/usuario/{usuarioId}")
+    public List<PedidoDTO> getByUsuario(@PathVariable Long usuarioId) {
+        return service.findByUsuarioId(usuarioId);
+    }
 
     @PostMapping
     public PedidoDTO create(@RequestBody CrearPedidoDTO dto) {
@@ -44,6 +49,13 @@ public class PedidoController {
     @PostMapping("/carrito")
     public List<PedidoDTO> createFromCart(@RequestBody CrearPedidoCarritoDTO dto) {
         return service.crearPedidoDesdeCarrito(dto);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<PedidoDTO> updateEstado(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        return service.updateEstado(id, body.get("estado"));
     }
 
     @DeleteMapping("/{id}")

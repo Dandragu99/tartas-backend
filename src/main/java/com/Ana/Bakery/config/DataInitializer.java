@@ -2,6 +2,9 @@ package com.Ana.Bakery.config;
 
 import com.Ana.Bakery.ingrediente.categoriaIngrediente.CategoriaIngrediente;
 import com.Ana.Bakery.ingrediente.ingredienteModel.Ingrediente;
+import com.Ana.Bakery.pedido.estadoPedido.EstadoPedido;
+import com.Ana.Bakery.pedido.pedidoModel.Pedido;
+import com.Ana.Bakery.pedido.pedidoRepository.PedidoRepository;
 import com.Ana.Bakery.producto.productoModel.ProductoBase;
 import com.Ana.Bakery.usuario.usuarioModel.Usuario;
 import com.Ana.Bakery.ingrediente.ingredienteRepository.IngredienteRepository;
@@ -10,14 +13,17 @@ import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
+    @Order(1)
     CommandLineRunner initUsers(UsuarioRepository usuarioRepository,
                                 PasswordEncoder passwordEncoder){
         return args -> {
@@ -46,6 +52,7 @@ public class DataInitializer {
     }
 
     @Bean
+    @Order(2)
     CommandLineRunner initDatabase(IngredienteRepository ingRepo, ProductoBaseRepository prodRepo) {
         return args -> {
             if (ingRepo.count() == 0) {
@@ -157,6 +164,105 @@ public class DataInitializer {
 
 
             System.out.println("¡Base de datos inicializada con éxito!");
+        };
+    }
+
+    @Bean
+    @Order(3)
+    CommandLineRunner initPedidos(UsuarioRepository usuarioRepository,
+                                  ProductoBaseRepository prodRepo,
+                                  PedidoRepository pedidoRepository,
+                                  PasswordEncoder passwordEncoder) {
+        return args -> {
+            // Usuarios extra
+            if (usuarioRepository.count() == 2) {
+                Usuario u1 = new Usuario();
+                u1.setUsername("maria");
+                u1.setPassword(passwordEncoder.encode("maria123"));
+                u1.setEmail("maria@bakery.com");
+                u1.setNombreCompleto("María García");
+                u1.setRol("ROLE_CLIENTE");
+                usuarioRepository.save(u1);
+
+                Usuario u2 = new Usuario();
+                u2.setUsername("carlos");
+                u2.setPassword(passwordEncoder.encode("carlos123"));
+                u2.setEmail("carlos@bakery.com");
+                u2.setNombreCompleto("Carlos López");
+                u2.setRol("ROLE_CLIENTE");
+                usuarioRepository.save(u2);
+            }
+
+            if (pedidoRepository.count() == 0 && prodRepo.count() > 0) {
+                Usuario cliente = usuarioRepository.findByUsername("cliente")
+                        .orElseThrow();
+                Usuario maria = usuarioRepository.findByUsername("maria")
+                        .orElseThrow();
+
+                List<ProductoBase> productos = prodRepo.findAll();
+                ProductoBase redVelvet  = productos.get(0);
+                ProductoBase cheesecake = productos.get(1);
+                ProductoBase limon      = productos.get(2);
+                ProductoBase chocolate  = productos.get(3);
+
+                // cliente — 4 pedidos en distintos estados para ver el timeline completo
+                Pedido p1 = new Pedido();
+                p1.setUsuario(cliente);
+                p1.setProductoBase(redVelvet);
+                p1.setIngredientesSeleccionados(List.of());
+                p1.setEstado(EstadoPedido.ENTREGADO);
+                p1.setPrecioTotal(32.5);
+                p1.setFechaEntrega(LocalDateTime.now().minusDays(10));
+                pedidoRepository.save(p1);
+
+                Pedido p2 = new Pedido();
+                p2.setUsuario(cliente);
+                p2.setProductoBase(cheesecake);
+                p2.setIngredientesSeleccionados(List.of());
+                p2.setEstado(EstadoPedido.ENVIADO);
+                p2.setPrecioTotal(24.0);
+                p2.setFechaEntrega(LocalDateTime.now().plusDays(1));
+                pedidoRepository.save(p2);
+
+                Pedido p3 = new Pedido();
+                p3.setUsuario(cliente);
+                p3.setProductoBase(limon);
+                p3.setIngredientesSeleccionados(List.of());
+                p3.setEstado(EstadoPedido.EN_PROCESO);
+                p3.setPrecioTotal(17.0);
+                p3.setFechaEntrega(LocalDateTime.now().plusDays(2));
+                pedidoRepository.save(p3);
+
+                Pedido p4 = new Pedido();
+                p4.setUsuario(cliente);
+                p4.setProductoBase(chocolate);
+                p4.setIngredientesSeleccionados(List.of());
+                p4.setEstado(EstadoPedido.PENDIENTE);
+                p4.setPrecioTotal(28.0);
+                p4.setFechaEntrega(LocalDateTime.now().plusDays(4));
+                pedidoRepository.save(p4);
+
+                // maria — 2 pedidos
+                Pedido p5 = new Pedido();
+                p5.setUsuario(maria);
+                p5.setProductoBase(chocolate);
+                p5.setIngredientesSeleccionados(List.of());
+                p5.setEstado(EstadoPedido.EN_PROCESO);
+                p5.setPrecioTotal(31.0);
+                p5.setFechaEntrega(LocalDateTime.now().plusDays(3));
+                pedidoRepository.save(p5);
+
+                Pedido p6 = new Pedido();
+                p6.setUsuario(maria);
+                p6.setProductoBase(redVelvet);
+                p6.setIngredientesSeleccionados(List.of());
+                p6.setEstado(EstadoPedido.PENDIENTE);
+                p6.setPrecioTotal(27.5);
+                p6.setFechaEntrega(LocalDateTime.now().plusDays(5));
+                pedidoRepository.save(p6);
+
+                System.out.println("Pedidos de prueba creados.");
+            }
         };
     }
 }

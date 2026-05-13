@@ -9,6 +9,7 @@ public class PedidoMapper {
     public PedidoDTO toDto(Pedido pedido){
         return new PedidoDTO(
                 pedido.getId(),
+                pedido.getUsuario().getId(),
                 pedido.getUsuario().getNombreCompleto(),
                 pedido.getProductoBase().getNombre(),
                 pedido.getIngredientesSeleccionados()

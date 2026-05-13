@@ -22,10 +22,11 @@ public class PedidoDTO {
     private Double precioTotal;
     private LocalDateTime fechaEntrega;
 
-    public PedidoDTO(Long id, String nombreCompleto, String nombre,
+    public PedidoDTO(Long id, Long usuarioId, String nombreCompleto, String nombre,
                      List<String> list, EstadoPedido estado,
                      Double precioTotal, LocalDateTime fechaEntrega) {
         this.idPedido = id;
+        this.usuarioId = usuarioId;
         this.nombreUsuario = nombreCompleto;
         this.productoBaseNombre = nombre;
         this.ingredientes = list;

@@ -44,7 +44,4 @@ public class Pedido {
             inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
     )
     private List<Ingrediente> ingredientesSeleccionados;
-
-
-
 }

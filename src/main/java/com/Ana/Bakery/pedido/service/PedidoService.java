@@ -71,6 +71,13 @@ public class PedidoService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    public List<PedidoDTO> findByUsuarioId(Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
     public ResponseEntity<PedidoDTO> updateById( Long id, Pedido pedidoActualizado){
         return repository.findById(id)
                 .map(pedido -> {
@@ -83,6 +90,14 @@ public class PedidoService {
 
                     Pedido pedidoGuardado = repository.save(pedido);
                     return ResponseEntity.ok(mapper.toDto(pedidoGuardado));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+    public ResponseEntity<PedidoDTO> updateEstado(Long id, String estado) {
+        return repository.findById(id)
+                .map(pedido -> {
+                    pedido.setEstado(EstadoPedido.valueOf(estado));
+                    return ResponseEntity.ok(mapper.toDto(repository.save(pedido)));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
