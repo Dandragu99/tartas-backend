@@ -107,7 +107,7 @@ public class GroqService implements LlmService {
                 "model", model,
                 "messages", messages,
                 "temperature", 0.2,
-                "max_tokens", 120,
+                "max_tokens", 80,
                 "top_p", 0.8
         );
 
