@@ -13,7 +13,6 @@ import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/api/upload")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UploadController {
 
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";

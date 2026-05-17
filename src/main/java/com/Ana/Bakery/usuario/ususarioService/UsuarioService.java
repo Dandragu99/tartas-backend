@@ -1,6 +1,6 @@
 package com.Ana.Bakery.usuario.ususarioService;
 
-import com.Ana.Bakery.usuario.UpdatePerfilDto;
+import com.Ana.Bakery.usuario.dto.UpdatePerfilDto;
 import com.Ana.Bakery.usuario.usuarioModel.Usuario;
 import com.Ana.Bakery.usuario.usuarioRepository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;

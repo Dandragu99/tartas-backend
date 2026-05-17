@@ -1,4 +1,4 @@
-package com.Ana.Bakery.usuario;
+package com.Ana.Bakery.usuario.dto;
 
 import lombok.Data;
 
