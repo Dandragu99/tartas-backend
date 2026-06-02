@@ -1,19 +1,34 @@
-# 🎂 Backend - Custom Cake E-commerce
+# 🎂 Tartas Backend - Custom Cake E-commerce API
 
-Backend API built with Spring Boot for a full-stack application that allows users to design and order personalized cakes.
+Backend API developed with Spring Boot as part of a full-stack e-commerce project for personalized cakes.
+
+This project was created as a personal/family-oriented application and was also used as my final project for DAM (Desarrollo de Aplicaciones Multiplataforma). The project was presented and approved with a final grade of 8.1.
 
 ---
 
 ## 🚀 Overview
 
-This backend provides a REST API to support a customizable cake e-commerce platform.
+Tartas Backend is the server-side application of a custom cake e-commerce platform. It provides a REST API that allows the frontend application to manage products, ingredients, users, orders, images and business logic related to personalized cake creation.
 
-It handles:
+The backend follows a layered architecture and is connected to an SQL database using Spring Data JPA.
 
-* Product and ingredient management
-* Business logic for cake customization
-* Image upload and storage
-* Communication with frontend (Angular)
+---
+
+## ✨ Main Features
+
+* RESTful API architecture.
+* Product management.
+* Ingredient management.
+* Product customization logic.
+* User and role management.
+* Order management.
+* Order status timeline.
+* Administrator features.
+* Image upload and storage system.
+* SQL database integration.
+* Data persistence with Spring Data JPA.
+* Backend connection with Angular frontend.
+* Layered architecture using controllers, services and repositories.
 
 ---
 
@@ -21,43 +36,94 @@ It handles:
 
 * Java
 * Spring Boot
-* Spring Web (REST API)
+* Spring Web
 * Spring Data JPA
-* MySQL
 * Maven
+* SQL database
+* MySQL
+* REST API
+* Git / GitHub
 
 ---
 
-## 📦 Features
+## 🧩 Full-Stack Architecture
 
-* ✅ RESTful API architecture
-* ✅ CRUD operations for products and ingredients
-* ✅ Ingredient categorization (base, filling, extras)
-* ✅ Image upload system (local storage)
-* ✅ Data initialization with sample content
-* 🚧 Authentication & security (in progress)
+This repository contains only the backend part of the application.
+
+The complete project is divided into:
+
+* Frontend: Angular application.
+* Backend: Spring Boot REST API.
+* Database: SQL database.
+* Deployment: Railway / external hosting environment.
+
+Frontend repository:
+
+```text
+https://github.com/Dandragu99/tartas-frontend
+```
+
+---
+
+## 📦 Main Functional Areas
+
+### Product Management
+
+The backend allows administrators to create, update, delete and retrieve products used in the e-commerce platform.
+
+### Ingredient Management
+
+The application manages different types of ingredients used for cake customization, such as bases, fillings and extras.
+
+### Order Management
+
+The backend handles order-related logic, including the status of each order and the timeline used to show customers the progress of their purchase.
+
+### Image Upload
+
+The API includes functionality for uploading and managing product images.
+
+### Admin Features
+
+The backend provides endpoints and logic used by the administrator dashboard in the frontend application.
 
 ---
 
 ## 🔗 API Endpoints
 
-### 📌 Products
+Some example API endpoints used by the frontend:
 
-```id="3pmk8z"
+### Products
+
+```bash
 /api/productos-base
 ```
 
-### 📌 Ingredients
+### Ingredients
 
-```id="7q7q0o"
+```bash
 /api/ingredientes
 ```
 
-### 📌 Upload
+### Orders
 
-```id="d9s8x1"
+```bash
+/api/pedidos
+```
+
+### Users
+
+```bash
+/api/usuarios
+```
+
+### Upload
+
+```bash
 /api/upload
 ```
+
+> Endpoint names may vary depending on the current backend implementation.
 
 ---
 
@@ -65,87 +131,133 @@ It handles:
 
 Clone the repository:
 
-```bash id="9r4xpl"
-git clone https://github.com/Dandragu99/back-tartas.git
-cd back-tartas
+```bash
+git clone https://github.com/Dandragu99/tartas-backend.git
+```
+
+Enter the project folder:
+
+```bash
+cd tartas-backend
 ```
 
 ---
 
-## ▶️ Run the application
+## ▶️ Run the Application
 
-```bash id="r1h2k3"
+Run the project using the Maven wrapper:
+
+```bash
 ./mvnw spring-boot:run
 ```
 
-Or with Maven:
+Or using Maven directly:
 
-```bash id="k29sl2"
+```bash
 mvn spring-boot:run
 ```
 
 The API will be available at:
 
-```id="m4ks92"
+```text
 http://localhost:8080
 ```
 
 ---
 
-## 🗄️ Database configuration
+## 🗄️ Database Configuration
 
-Configure your database in:
+Configure your database connection in:
 
-```id="z8x1c2"
+```text
 src/main/resources/application.properties
 ```
 
-Example:
+Example configuration:
 
-```properties id="x7c2v9"
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/tartas
 spring.datasource.username=root
 spring.datasource.password=yourpassword
 spring.jpa.hibernate.ddl-auto=update
 ```
 
+> For security reasons, real credentials should not be uploaded to GitHub.
+
 ---
 
 ## 📁 Project Structure
 
-```id="s1k3p9"
+General structure of the backend project:
+
+```text
 src/
- ├── controller
- ├── service
- ├── repository
- ├── model
- └── config
+ ├── main/
+ │   ├── java/
+ │   │   └── ...
+ │   │       ├── controller/
+ │   │       ├── service/
+ │   │       ├── repository/
+ │   │       ├── model/
+ │   │       ├── dto/
+ │   │       └── config/
+ │   └── resources/
+ │       └── application.properties
+ └── test/
 ```
 
 ---
 
-## 📸 Image handling
+## 📸 Image Handling
 
-* Images are uploaded via `/api/upload`
-* Stored locally in an `uploads/` directory
-* Served as static resources
+* Images are uploaded through backend endpoints.
+* Images are stored and served so they can be displayed from the frontend.
+* This functionality is used for product images in the e-commerce catalogue and administration panel.
+
+---
+
+## 🔐 Security Note
+
+The project includes user-related and administrator-related functionality. Security and authentication may continue evolving as part of future improvements.
+
+Recommended future improvements:
+
+* Strengthening authentication and authorization.
+* Improving role-based access control.
+* Adding more validation in sensitive endpoints.
+* Preparing production-ready environment variables.
 
 ---
 
 ## 📌 Project Status
 
-🚧 Currently in development
+Project completed as a final DAM project / TFG and presented with a final grade of 8.1.
 
-* Security (Spring Security) pending improvements
-* Admin features expanding
-* Performance optimizations planned
+The backend is currently considered part of a portfolio project, but it may continue evolving with improvements such as stronger security, payment integration, advanced order management and production deployment adjustments.
+
+---
+
+## 🎯 Purpose of the Project
+
+The main purpose of this backend was to build the server-side part of a complete full-stack application, applying knowledge of Java, Spring Boot, REST API development, database management, business logic, file upload, layered architecture and deployment preparation.
+
+It was also designed with the idea of becoming a possible real e-commerce solution for a family custom cake business in the future.
 
 ---
 
 ## 🧠 Notes
 
-* Designed following layered architecture (Controller → Service → Repository)
-* Uses DTO mapping for clean data transfer
-* Focused on scalability and maintainability
+* Designed following layered architecture: Controller → Service → Repository.
+* Uses Spring Data JPA for data persistence.
+* Focused on maintainability and scalability.
+* Built to communicate with an Angular frontend.
+* Developed as part of a full-stack portfolio project.
 
 ---
+
+## 👨‍💻 Author
+
+Developed by **Danut Dragu**.
+
+* GitHub: [Dandragu99](https://github.com/Dandragu99)
+* LinkedIn: [Danut Dragu](https://www.linkedin.com/in/dandragu99/)
